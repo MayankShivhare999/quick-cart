@@ -1,0 +1,169 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.22.xsd">
+
+    <!-- User Table -->
+    <changeSet id="1" author="mayankms">
+        <createTable tableName="user">
+            <column name="id" type="BINARY(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME(6)"/>
+            <column name="updated_date" type="DATETIME(6)"/>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="full_name" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="status" type="ENUM('ACTIVE','INACTIVE')"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Cart Table -->
+    <changeSet id="2" author="mayankms">
+        <createTable tableName="cart">
+            <column name="id" type="BINARY(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME(6)"/>
+            <column name="updated_date" type="DATETIME(6)"/>
+            <column name="total_amount" type="DOUBLE"/>
+            <column name="user_id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="cart" columnNames="user_id" constraintName="UK_cart_user_id"/>
+        <addForeignKeyConstraint baseTableName="cart" baseColumnNames="user_id"
+                                 constraintName="FK_cart_user" referencedTableName="user" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Category Table -->
+    <changeSet id="3" author="mayankms">
+        <createTable tableName="category">
+            <column name="id" type="BINARY(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME(6)"/>
+            <column name="updated_date" type="DATETIME(6)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Product Table -->
+    <changeSet id="4" author="mayankms">
+        <createTable tableName="product">
+            <column name="id" type="BINARY(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME(6)"/>
+            <column name="updated_date" type="DATETIME(6)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="image_url" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="price" type="DOUBLE"/>
+            <column name="quantity_in_stock" type="INT"/>
+            <column name="category_id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="product" baseColumnNames="category_id"
+                                 constraintName="FK_product_category" referencedTableName="category" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Cart Item Table -->
+    <changeSet id="5" author="mayankms">
+        <createTable tableName="cart_item">
+            <column name="id" type="BINARY(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME(6)"/>
+            <column name="updated_date" type="DATETIME(6)"/>
+            <column name="price" type="DOUBLE"/>
+            <column name="quantity" type="INT"/>
+            <column name="product_id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="cart_item" columnNames="product_id" constraintName="UK_cart_item_product_id"/>
+        <addForeignKeyConstraint baseTableName="cart_item" baseColumnNames="product_id"
+                                 constraintName="FK_cart_item_product" referencedTableName="product" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Cart Products Table -->
+    <changeSet id="6" author="mayankms">
+        <createTable tableName="cart_products">
+            <column name="cart_id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="products_id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="cart_products" columnNames="products_id" constraintName="UK_cart_products_products_id"/>
+        <addForeignKeyConstraint baseTableName="cart_products" baseColumnNames="products_id"
+                                 constraintName="FK_cart_products_cart_item" referencedTableName="cart_item" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="cart_products" baseColumnNames="cart_id"
+                                 constraintName="FK_cart_products_cart" referencedTableName="cart" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Order Item Table -->
+    <changeSet id="7" author="mayankms">
+        <createTable tableName="order_item">
+            <column name="id" type="BINARY(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME(6)"/>
+            <column name="updated_date" type="DATETIME(6)"/>
+            <column name="price" type="DOUBLE"/>
+            <column name="quantity" type="INT"/>
+            <column name="product_id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addUniqueConstraint tableName="order_item" columnNames="product_id" constraintName="UK_order_item_product_id"/>
+        <addForeignKeyConstraint baseTableName="order_item" baseColumnNames="product_id"
+                                 constraintName="FK_order_item_product" referencedTableName="product" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Purchase Order Table -->
+    <changeSet id="8" author="mayankms">
+        <createTable tableName="purchase_order">
+            <column name="id" type="BINARY(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME(6)"/>
+            <column name="updated_date" type="DATETIME(6)"/>
+            <column name="status" type="ENUM('PENDING','COMPLETED','CANCELLED')"/>
+            <column name="total_amount" type="DOUBLE"/>
+            <column name="user_id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="purchase_order" baseColumnNames="user_id"
+                                 constraintName="FK_purchase_order_user" referencedTableName="user" referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Payment Table -->
+    <changeSet id="9" author="mayankms">
+        <createTable tableName="payment">
+            <column name="id" type="BINARY(16)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_date" type="DATETIME(6)"/>
+            <column name="updated_date" type="DATETIME(6)"/>
+            <column name="amount" type="DOUBLE"/>
+            <column name="payment_method" type="ENUM('CASH_ON_DELIVERY','CREDIT_CARD','DEBIT_CARD','PAYPAL')"/>
+            <column name="payment_status" type="ENUM('FAILED','PENDING','SUCCESS')"/>
+            <column name="transaction_date" type="DATETIME(6)"/>
+            <column name="order_id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="payment" baseColumnNames="order_id"
+                                 constraintName="FK_payment_purchase_order" referencedTableName="purchase_order" referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>
