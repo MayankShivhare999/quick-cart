@@ -8,6 +8,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +24,7 @@ public class Order extends BaseModel {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems;
     private Double totalAmount;
+    @CreatedDate
     private LocalDateTime orderDate;
     private OrderStatus orderStatus;
 }
