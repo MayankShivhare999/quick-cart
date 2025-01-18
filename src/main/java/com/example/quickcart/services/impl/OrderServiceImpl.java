@@ -1,6 +1,5 @@
 package com.example.quickcart.services.impl;
 
-import com.example.quickcart.exceptions.UserNotFoundException;
 import com.example.quickcart.models.Order;
 import com.example.quickcart.models.OrderItem;
 import com.example.quickcart.models.OrderStatus;
@@ -26,7 +25,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getAllOrdersByUserId(UUID userId) throws UserNotFoundException {
+    public List<Order> getAllOrdersByUserId(UUID userId) {
         User user = userService.getUserById(userId);
         if (user != null) {
             return orderRepository.findByUser_Id(userId);
@@ -35,7 +34,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order createOrder(UUID userId, List<OrderItem> orderItems) throws UserNotFoundException {
+    public Order createOrder(UUID userId, List<OrderItem> orderItems) {
         User user = userService.getUserById(userId);
 
         Order order = new Order();

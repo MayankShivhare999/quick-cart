@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface OrderService {
 
-    List<Order> getAllOrdersByUserId(UUID userId) throws UserNotFoundException;
+    List<Order> getAllOrdersByUserId(UUID userId);
 
-    Order createOrder(UUID userId, List<OrderItem> orderItems) throws UserNotFoundException;
+    Order createOrder(UUID userId, List<OrderItem> orderItems);
 }
