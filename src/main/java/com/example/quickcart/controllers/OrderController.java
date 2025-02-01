@@ -21,6 +21,14 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    @GetMapping
+    public ResponseEntity<List<Order>> getAllOrders() {
+        ResponseEntity<List<Order>> responseEntity = null;
+        List<Order> allOrders = orderService.getAllOrders();
+        responseEntity = ResponseEntity.ok(allOrders);
+        return responseEntity;
+    }
+
     @GetMapping("/{userId}")
     public ResponseEntity<List<Order>> getAllOrdersByUserId(@PathVariable UUID userId) {
         ResponseEntity<List<Order>> responseEntity = null;

@@ -46,6 +46,11 @@ public class OrderServiceImpl implements OrderService {
 
     }
 
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
     private Double getTotalPrice(List<OrderItem> orderItems) {
         return orderItems.stream()
                 .mapToDouble(orderItem -> orderItem.getProduct().getPrice() * orderItem.getQuantity()).sum();
